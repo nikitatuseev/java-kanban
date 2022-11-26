@@ -1,6 +1,5 @@
 package tasks;
 
-
 import java.util.Objects;
 
 public class Task {
@@ -9,12 +8,12 @@ public class Task {
     private String status = "NEW";
     protected int id;
 
-
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
+    //использую этот конструктор для обновления
     public Task(String name, String description, String status, int id) {
         this.name = name;
         this.description = description;
@@ -23,7 +22,6 @@ public class Task {
     }
 
     public int getId() {
-        this.id = id;
         return this.id;
     }
 
@@ -38,7 +36,6 @@ public class Task {
     public void setName(String name) {
         this.name = name;
     }
-
 
     public String getDescription() {
         return description;
@@ -68,7 +65,6 @@ public class Task {
     public int hashCode() {
         return Objects.hash(name, description, status, id);
     }
-
 
     public String toString() {
         return "Id:" + getId() + " Name:" + getName() + "-" + getDescription() + " Статус-" + getStatus();

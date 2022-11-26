@@ -1,13 +1,19 @@
 package tasks;
 
-
 import java.util.ArrayList;
-
 import java.util.Objects;
 
 public class Epic extends Task {
     private ArrayList<Integer> listIdOfSubTask = new ArrayList<>();
 
+    public Epic(String name, String description) {
+        super(name, description);
+    }
+    //использую этот конструктор для обновления
+    public Epic(String name, String description, int id) {
+        super(name, description);
+        this.id = id;
+    }
 
     public ArrayList<Integer> getListIdOfSubTask() {
         return listIdOfSubTask;
@@ -15,10 +21,6 @@ public class Epic extends Task {
 
     public void setListIdOfSubTask(ArrayList<Integer> listIdOfSubTask) {
         this.listIdOfSubTask = listIdOfSubTask;
-    }
-
-    public Epic(String name, String description) {
-        super(name, description);
     }
 
     @Override
@@ -37,7 +39,8 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Id:" + getId() + " Name-" + getName() + "-" + getDescription() + " Статус " + getStatus();
+        return "Id:" + getId() + " Name-" + getName() + "-" + getDescription() + " Статус " + getStatus()
+                + " " + "Список id подзадач " + listIdOfSubTask;
     }
 
 }
