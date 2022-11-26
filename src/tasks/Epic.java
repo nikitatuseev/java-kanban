@@ -9,11 +9,6 @@ public class Epic extends Task {
     public Epic(String name, String description) {
         super(name, description);
     }
-    //использую этот конструктор для обновления
-    public Epic(String name, String description, int id) {
-        super(name, description);
-        this.id = id;
-    }
 
     public ArrayList<Integer> getListIdOfSubTask() {
         return listIdOfSubTask;

@@ -13,14 +13,6 @@ public class Task {
         this.description = description;
     }
 
-    //использую этот конструктор для обновления
-    public Task(String name, String description, String status, int id) {
-        this.name = name;
-        this.description = description;
-        this.status = status;
-        this.id = id;
-    }
-
     public int getId() {
         return this.id;
     }

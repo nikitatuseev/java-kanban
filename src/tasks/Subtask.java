@@ -9,13 +9,6 @@ public class Subtask extends Task {
         super(name, description);
         this.idOfEpic = idOfEpic;
     }
-    //использую этот конструктор для обновления
-    public Subtask(String name, String description, int idOfEpic, String status, int id) {
-        super(name, description, status, idOfEpic);
-        this.setStatus(status);
-        this.id = id;
-        this.idOfEpic = idOfEpic;
-    }
 
     public int getIdOfEpic() {
         return idOfEpic;

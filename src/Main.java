@@ -35,27 +35,43 @@ public class Main {
         System.out.println();
 
         System.out.println("Обновление");
-        Task newTaskFirst = new Task("task1", "description", "DONE", 1);
+        Task newTaskFirst = new Task("task1", "description");
+        newTaskFirst.setId(1);
+        newTaskFirst.setStatus("DONE");
         manager.updateTask(newTaskFirst);
 
         System.out.println(manager.getAllTask());
 
-        Subtask newSubTaskFirst = new Subtask("sub1", "description", 3, "DONE", 5);
+        Subtask newThirdSubTask = new Subtask("sub3", "jhjh", secondEpic.getId());
+        newThirdSubTask.setStatus("DONE");
+        newThirdSubTask.setId(7);
+        manager.updateSubTask(newThirdSubTask);
+
+
+        Subtask newSubTaskFirst = new Subtask("sub1", "description", firstEpic.getId());
+        newSubTaskFirst.setStatus("DONE");
+        newSubTaskFirst.setId(5);
         manager.updateSubTask(newSubTaskFirst);
         System.out.println();
 
         System.out.println(manager.getAllSubTask());
         System.out.println();
 
-        Epic newEpic = new Epic("newEpic1", "newDescription", 3);
+        Epic newEpic = new Epic("newEpic1", "newDescription");
+        newEpic.setId(3);
         manager.updateEpic(newEpic);
+
 
         System.out.println("печать всех эпиков");
         System.out.println(manager.getAllEpic());
         System.out.println();
 
         System.out.println("Все сабы по id эпика");
-        manager.getAllSubByNameEpic(3);
+        System.out.println(manager.getAllSubByNameEpic(3));
+        System.out.println();
+
+        manager.removeAllSubTask();
+        System.out.println(manager.getAllEpic());
 
 
     }
