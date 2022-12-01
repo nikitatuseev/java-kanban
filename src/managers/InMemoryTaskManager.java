@@ -1,14 +1,17 @@
 package managers;
 
 import tasks.Epic;
+import tasks.StatusTask;
 import tasks.Subtask;
 import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-public class Manager {
-    //мапа для обычный задач
+public class InMemoryTaskManager implements TaskManager {
+
+    HistoryManager historyManager = Managers.getDefaultHistory();
     HashMap<Integer, Task> allTask = new HashMap<>();
     int id = 1;
     //мапа для эпиков
@@ -16,6 +19,8 @@ public class Manager {
     //мапа для сабтасков
     HashMap<Integer, Subtask> allSubTask = new HashMap<>();
 
+
+    @Override
     public void saveTask(Task task) {
         task.setId(id);
         allTask.put(id, task);
@@ -23,12 +28,14 @@ public class Manager {
 
     }
 
+    @Override
     public void saveEpic(Epic epic) {
         epic.setId(id);
         allEpic.put((id), epic);
         id++;
     }
 
+    @Override
     public void saveSubTask(Subtask subtask) {
         subtask.setId(id);
         allSubTask.put(id, subtask);
@@ -40,31 +47,41 @@ public class Manager {
         updateEpicStatus(subtask);
     }
 
-    public ArrayList<Task> getAllTask() {
+    @Override
+    public List<Task> getAllTask() {
         return new ArrayList<>(allTask.values());
     }
 
-    public ArrayList<Epic> getAllEpic() {
+    @Override
+    public List<Epic> getAllEpic() {
         return new ArrayList<>(allEpic.values());
     }
 
-    public ArrayList<Subtask> getAllSubTask() {
+    @Override
+    public List<Subtask> getAllSubTask() {
         return new ArrayList<>(allSubTask.values());
     }
 
+    @Override
     public Task getTaskById(int id) {
+        historyManager.add(allTask.get(id));
         return allTask.get(id);
     }
 
+    @Override
     public Epic getEpicById(int id) {
+        historyManager.add(allEpic.get(id));
         return allEpic.get(id);
     }
 
+    @Override
     public Subtask getSubTaskById(int id) {
+        historyManager.add(allSubTask.get(id));
         return allSubTask.get(id);
     }
 
-    public ArrayList<Subtask> getAllSubByNameEpic(int id) {
+    @Override
+    public List<Subtask> getAllSubByNameEpic(int id) {
         ArrayList<Subtask> allEpicSubTask = new ArrayList<>();
         Epic desiredEpic = allEpic.get(id);
         ArrayList<Integer> list = desiredEpic.getListIdOfSubTask();
@@ -75,15 +92,18 @@ public class Manager {
 
     }
 
+    @Override
     public void removeAllTask() {
         allTask.clear();
     }
 
+    @Override
     public void removeAllEpic() {
         allEpic.clear();
         allSubTask.clear();
     }
 
+    @Override
     public void removeAllSubTask() {
         allSubTask.clear();
         for (int key : allEpic.keySet()) {
@@ -91,10 +111,11 @@ public class Manager {
             ArrayList<Integer> list = allEpicWithSub.getListIdOfSubTask();
             list.clear();
             allEpicWithSub.setListIdOfSubTask(list);
-            allEpicWithSub.setStatus("NEW");
+            allEpicWithSub.setStatus(StatusTask.NEW);
         }
     }
 
+    @Override
     public void removeTaskById(int id) {
         if (allTask.get(id) == null) {
             System.out.println("Такой задачи нет");
@@ -103,6 +124,7 @@ public class Manager {
         }
     }
 
+    @Override
     public void removeEpicById(int id) {
         if (allEpic.get(id) == null) {
             System.out.println("Такой задачи нет");
@@ -116,6 +138,7 @@ public class Manager {
         }
     }
 
+    @Override
     public void removeSubTaskById(int id) {
         if (allSubTask.get(id) == null) {
             System.out.println("Такой задачи нет");
@@ -129,6 +152,7 @@ public class Manager {
         }
     }
 
+    @Override
     public void updateTask(Task task) {
         if (allTask.get(task.getId()) == null) {
             System.out.println("Такой задачи нет");
@@ -137,6 +161,7 @@ public class Manager {
         }
     }
 
+    @Override
     public void updateSubTask(Subtask subtask) {
         if (allSubTask.get(subtask.getId()) == null) {
             System.out.println("Такой задачи нет");
@@ -146,32 +171,34 @@ public class Manager {
         }
     }
 
-    void updateEpicStatus(Subtask subtask) {
+    @Override
+    public void updateEpicStatus(Subtask subtask) {
         int statusDone = 0;
         int statusNew = 0;
         Epic epicForUpdate = allEpic.get(subtask.getIdOfEpic());
         ArrayList<Integer> list = epicForUpdate.getListIdOfSubTask();
         if (list.isEmpty()) {
-            epicForUpdate.setStatus("NEW");
+            epicForUpdate.setStatus(StatusTask.NEW);
         } else {
             for (Integer id : list) {
                 Subtask statusOfSubTask = allSubTask.get(id);
-                if (statusOfSubTask.getStatus().equals("DONE")) {
+                if (statusOfSubTask.getStatus().equals(StatusTask.DONE)) {
                     statusDone++;
-                } else if (statusOfSubTask.getStatus().equals("NEW")) {
+                } else if (statusOfSubTask.getStatus().equals(StatusTask.NEW)) {
                     statusNew++;
                 }
             }
             if (statusDone == list.size()) {
-                epicForUpdate.setStatus("DONE");
+                epicForUpdate.setStatus(StatusTask.DONE);
             } else if (statusNew == list.size()) {
-                epicForUpdate.setStatus("NEW");
+                epicForUpdate.setStatus(StatusTask.NEW);
             } else {
-                epicForUpdate.setStatus("IN_PROGRESS");
+                epicForUpdate.setStatus(StatusTask.In_Progress);
             }
         }
     }
 
+    @Override
     public void updateEpic(Epic epic) {
         if (allEpic.get(epic.getId()) == null) {
             System.out.println("Такой задачи нет");
@@ -181,5 +208,9 @@ public class Manager {
             epicForUpdate.setDescription(epic.getDescription());
         }
     }
-}
 
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
+    }
+}

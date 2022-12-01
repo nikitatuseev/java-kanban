@@ -1,11 +1,16 @@
-import managers.Manager;
+import managers.Managers;
+import managers.TaskManager;
 import tasks.Epic;
+import tasks.StatusTask;
 import tasks.Subtask;
 import tasks.Task;
 
 public class Main {
     public static void main(String[] args) {
-        Manager manager = new Manager();
+//я возможно неправильно понял что надо выводить в истории просмотра. список самих задач или список их id
+
+        TaskManager manager = Managers.getDefault();
+
         System.out.println("печать всех обычных задач");
         Task taskFirst = new Task("task1", "description");
         manager.saveTask(taskFirst);
@@ -37,19 +42,19 @@ public class Main {
         System.out.println("Обновление");
         Task newTaskFirst = new Task("task1", "description");
         newTaskFirst.setId(1);
-        newTaskFirst.setStatus("DONE");
+        newTaskFirst.setStatus(StatusTask.DONE);
         manager.updateTask(newTaskFirst);
 
         System.out.println(manager.getAllTask());
 
         Subtask newThirdSubTask = new Subtask("sub3", "jhjh", secondEpic.getId());
-        newThirdSubTask.setStatus("DONE");
+        newThirdSubTask.setStatus(StatusTask.DONE);
         newThirdSubTask.setId(7);
         manager.updateSubTask(newThirdSubTask);
 
 
         Subtask newSubTaskFirst = new Subtask("sub1", "description", firstEpic.getId());
-        newSubTaskFirst.setStatus("DONE");
+        newSubTaskFirst.setStatus(StatusTask.DONE);
         newSubTaskFirst.setId(5);
         manager.updateSubTask(newSubTaskFirst);
         System.out.println();
@@ -72,7 +77,13 @@ public class Main {
 
         manager.removeAllSubTask();
         System.out.println(manager.getAllEpic());
-
+        System.out.println();
+        System.out.println("Проверяю работу истории просмотра");
+        manager.getEpicById(3);
+        manager.getTaskById(1);
+        manager.getTaskById(2);
+        manager.getEpicById(4);
+        System.out.println(manager.getHistory());
 
     }
 }
