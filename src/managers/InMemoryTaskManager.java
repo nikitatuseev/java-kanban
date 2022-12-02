@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final HistoryManager historyManager = Managers.getDefaultHistory();//меня сильно смущает эта строчка
-    //я не уверен можно ли так делать
+    private final HistoryManager historyManager = Managers.getDefaultHistory();
+
     private final HashMap<Integer, Task> allTask = new HashMap<>();
     private int id = 1;
     //мапа для эпиков
