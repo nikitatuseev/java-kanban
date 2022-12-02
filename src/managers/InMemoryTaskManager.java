@@ -10,29 +10,31 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-
-    HistoryManager historyManager = Managers.getDefaultHistory();
-    HashMap<Integer, Task> allTask = new HashMap<>();
-    int id = 1;
+    private final HistoryManager historyManager = Managers.getDefaultHistory();//меня сильно смущает эта строчка
+    //я не уверен можно ли так делать
+    private final HashMap<Integer, Task> allTask = new HashMap<>();
+    private int id = 1;
     //мапа для эпиков
-    HashMap<Integer, Epic> allEpic = new HashMap<>();
+    private final HashMap<Integer, Epic> allEpic = new HashMap<>();
     //мапа для сабтасков
-    HashMap<Integer, Subtask> allSubTask = new HashMap<>();
+    private final HashMap<Integer, Subtask> allSubTask = new HashMap<>();
 
+    private void createId() {
+        id++;
+    }
 
     @Override
     public void saveTask(Task task) {
         task.setId(id);
         allTask.put(id, task);
-        id++;
-
+        createId();
     }
 
     @Override
     public void saveEpic(Epic epic) {
         epic.setId(id);
         allEpic.put((id), epic);
-        id++;
+        createId();
     }
 
     @Override
@@ -43,7 +45,7 @@ public class InMemoryTaskManager implements TaskManager {
         ArrayList<Integer> list = epicForStatusCheck.getListIdOfSubTask();
         list.add(id);
         epicForStatusCheck.setListIdOfSubTask(list);
-        id++;
+        createId();
         updateEpicStatus(subtask);
     }
 

@@ -7,7 +7,6 @@ import tasks.Task;
 
 public class Main {
     public static void main(String[] args) {
-//я возможно неправильно понял что надо выводить в истории просмотра. список самих задач или список их id
 
         TaskManager manager = Managers.getDefault();
 
