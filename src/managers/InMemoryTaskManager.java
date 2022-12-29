@@ -96,17 +96,39 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllTask() {
+        for (int i : allTask.keySet()) {
+            if (historyManager.getHistory().contains(allTask.get(i))) {
+                historyManager.remove(i);
+            }
+        }
         allTask.clear();
     }
 
     @Override
     public void removeAllEpic() {
+        System.out.println("Проверка");
+        for (int i : allEpic.keySet()) {
+            if (historyManager.getHistory().contains(allEpic.get(i))) {
+                historyManager.remove(i);
+            }
+            for (int j : allEpic.get(i).getListIdOfSubTask()) {
+                if (historyManager.getHistory().get(j) == allSubTask.get(i)) {
+                    historyManager.remove(j);
+                }
+            }
+        }
         allEpic.clear();
         allSubTask.clear();
     }
 
     @Override
     public void removeAllSubTask() {
+        for (int i : allSubTask.keySet()) {
+            if (historyManager.getHistory().contains(allSubTask.get(i))) {
+                historyManager.remove(i);
+            }
+
+        }
         allSubTask.clear();
         for (int key : allEpic.keySet()) {
             Epic allEpicWithSub = allEpic.get(key);
@@ -122,6 +144,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (allTask.get(id) == null) {
             System.out.println("Такой задачи нет");
         } else {
+            if (historyManager.getHistory().contains(allTask.get(id))) {
+                historyManager.remove(id);
+            }
             allTask.remove(id);
         }
     }
@@ -131,6 +156,15 @@ public class InMemoryTaskManager implements TaskManager {
         if (allEpic.get(id) == null) {
             System.out.println("Такой задачи нет");
         } else {
+            if (historyManager.getHistory().contains(allEpic.get(id))) {
+                historyManager.remove(id);
+            }
+            for (int i : allEpic.get(id).getListIdOfSubTask()) {
+                if (historyManager.getHistory().contains(allSubTask.get(i))) {
+                    historyManager.remove(i);
+                }
+            }
+
             Epic selectedEpic = allEpic.get(id);
             ArrayList<Integer> list = selectedEpic.getListIdOfSubTask();
             for (int keySubTask : list) {
@@ -145,6 +179,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (allSubTask.get(id) == null) {
             System.out.println("Такой задачи нет");
         } else {
+            if (historyManager.getHistory().contains(allSubTask.get(id))) {
+                historyManager.remove(id);
+            }
             Subtask nameSubTask = allSubTask.get(id);
             Epic epicWithSelectedSub = allEpic.get(nameSubTask.getIdOfEpic());
             ArrayList<Integer> listId = epicWithSelectedSub.getListIdOfSubTask();
@@ -215,4 +252,5 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
+
 }

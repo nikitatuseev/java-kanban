@@ -74,15 +74,20 @@ public class Main {
         System.out.println(manager.getAllSubByNameEpic(3));
         System.out.println();
 
-        manager.removeAllSubTask();
         System.out.println(manager.getAllEpic());
         System.out.println();
+
         System.out.println("Проверяю работу истории просмотра");
         manager.getEpicById(3);
+        manager.getSubTaskById(5);
         manager.getTaskById(1);
         manager.getTaskById(2);
         manager.getEpicById(4);
         System.out.println(manager.getHistory());
+        manager.getEpicById(3);
+        manager.removeEpicById(3);
+        System.out.println(manager.getHistory());
+
 
     }
 }
