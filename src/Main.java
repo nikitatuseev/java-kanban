@@ -71,7 +71,7 @@ public class Main {
         System.out.println();
 
         System.out.println("Все сабы по id эпика");
-        System.out.println(manager.getAllSubByNameEpic(3));
+        System.out.println(manager.getSubtasksByNameEpic(3));
         System.out.println();
 
         System.out.println(manager.getAllEpic());
