@@ -4,9 +4,7 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-
 import java.util.List;
-
 
 public interface TaskManager {
     void saveTask(Task task);
@@ -48,7 +46,5 @@ public interface TaskManager {
     void updateEpic(Epic epic);
 
     List<Task> getHistory();
-
-
 }
 

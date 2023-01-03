@@ -2,32 +2,27 @@ package managers;
 
 import tasks.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final HashMap<Integer, Node> mapHistory = new HashMap<>();
-    public CustomLinkedList<Task> list = new CustomLinkedList<>();
+    public CustomLinkedList list = new CustomLinkedList();
 
     @Override
     public void add(Task task) {
-        Node<Task> node = new Node<>(null, task, null);
-        if (mapHistory.containsKey(node.data.getId())) {
-            Node forRemove = list.findNode(node.data);
-            list.removeNode(forRemove);
-            mapHistory.remove(node.data.getId());
+        Node node = new Node(null, task, null);
+        if (task != null) {
+            if (list.nodeMap.containsKey(node.data.getId())) {
+                Node forRemove = list.findNode(node.data.getId());
+                list.removeNode(forRemove);
+            }
+            list.linkLast(node.data);
         }
-        list.linkLast(node.data);
-        mapHistory.put(task.getId(), node);
     }
 
     @Override
     public void remove(int id) {
-        Node forRemove = list.findNode(mapHistory.get(id).data);
+        Node forRemove = list.findNode(id);
         list.removeNode(forRemove);
-        mapHistory.remove(id);
     }
 
     @Override
@@ -35,10 +30,15 @@ public class InMemoryHistoryManager implements HistoryManager {
         return list.getTasks();
     }
 
-    static class CustomLinkedList<T extends Task> {
+    static class CustomLinkedList {
+        Map<Integer, Node> nodeMap;
         private Node head;
         private Node tail;
         private int size = 0;
+
+        public CustomLinkedList() {
+            nodeMap = new HashMap<>();
+        }
 
         public void linkLast(Task task) {
             final Node oldTail = tail;
@@ -49,6 +49,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             } else {
                 oldTail.next = newNode;
             }
+            nodeMap.put(task.getId(), newNode);
             size++;
         }
 
@@ -62,29 +63,50 @@ public class InMemoryHistoryManager implements HistoryManager {
             return tasksHistoryList;
         }
 
-        public Node findNode(Task data) {
-            Node current = head;
-            while (current != null) {
-                if (current.data == data) {
-                    return current;
-                }
-                current = current.next;
-            }
-            return null;
+        public Node findNode(int id) {
+            return nodeMap.get(id);
         }
 
         public void removeNode(Node node) {
+            //если я использую первый вариант то возникает ошибка и я не понимаю как ее исправить. Второй вариант
+            //как я проверил работает при всех случаях но мне все равно кажется что он неправильный
+
+           /*if (nodeMap.size()== 1) {
+                head = null;
+                tail = null;
+            } else {
+                if (node.prev != null) {
+                    if (node.next == null) {
+                    tail = node.prev;
+                    tail.next = null;
+                }
+                    node.prev.next = node.next;
+            } else {
+                head = node.next;
+                head.prev = null;
+            }
+            if (node.next != null) {
+                if (node.prev == null) {
+                    head = node.next;
+                    head.prev = null;
+                } else {
+                    node.next.prev = node.prev;
+                    node.data = null;
+                }
+            }
+           }
+           nodeMap.remove(node.data.getId());
+
+            */
             if (node.prev != null) {
                 node.prev.next = node.next;
-                node.data = null;
             } else {
                 head = node.next;
             }
             if (node.next != null) {
                 node.next.prev = node.prev;
-                node.data = null;
             }
+            nodeMap.remove(node.data.getId());
         }
-
     }
 }

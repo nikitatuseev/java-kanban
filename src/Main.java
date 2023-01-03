@@ -85,7 +85,9 @@ public class Main {
         manager.getEpicById(4);
         System.out.println(manager.getHistory());
         manager.getEpicById(3);
-        manager.removeEpicById(3);
+        manager.removeSubTaskById(5);
+        manager.removeEpicById(4);
+        manager.removeTaskById(1);
         System.out.println(manager.getHistory());
 
 
