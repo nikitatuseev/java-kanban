@@ -89,7 +89,5 @@ public class Main {
         manager.removeEpicById(4);
         manager.removeTaskById(1);
         System.out.println(manager.getHistory());
-
-
     }
 }
