@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
-    private final HashMap<Integer, Task> allTask = new HashMap<>();
-    private int id = 1;
-    private final HashMap<Integer, Epic> allEpic = new HashMap<>();
-    private final HashMap<Integer, Subtask> allSubTask = new HashMap<>();
+    protected HistoryManager historyManager = Managers.getDefaultHistory();
+    protected HashMap<Integer, Task> allTask = new HashMap<>();
+    protected int id = 1;
+    protected HashMap<Integer, Epic> allEpic = new HashMap<>();
+    protected HashMap<Integer, Subtask> allSubTask = new HashMap<>();
 
     private void createId() {
         id++;
@@ -50,7 +50,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Task> getAllTask() {
+    public ArrayList<Task> getAllTask() {
         return new ArrayList<>(allTask.values());
     }
 
@@ -199,7 +199,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private void updateEpicStatus(Subtask subtask) {
+    protected void updateEpicStatus(Subtask subtask) {
         int statusDone = 0;
         int statusNew = 0;
         Epic epicForUpdate = allEpic.get(subtask.getIdOfEpic());
