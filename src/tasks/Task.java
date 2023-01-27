@@ -3,12 +3,19 @@ package tasks;
 import java.util.Objects;
 
 public class Task {
-    private String name;
-    private String description;
-    private StatusTask status = StatusTask.NEW;
-    private int id;
+    protected String name;
+    protected String description;
+    protected StatusTask status = StatusTask.NEW;
+    protected int id;
 
     public Task(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    public Task(int id, StatusTask status, String name, String description) {
+        this.id = id;
+        this.status = status;
         this.name = name;
         this.description = description;
     }

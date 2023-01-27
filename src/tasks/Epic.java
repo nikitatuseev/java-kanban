@@ -10,6 +10,10 @@ public class Epic extends Task {
         super(name, description);
     }
 
+    public Epic(int id, StatusTask status, String name, String description) {
+        super(id, status, name, description);
+    }
+
     public ArrayList<Integer> getListIdOfSubTask() {
         return listIdOfSubTask;
     }

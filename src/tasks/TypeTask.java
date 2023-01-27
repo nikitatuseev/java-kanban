@@ -1,6 +1,5 @@
-package managers;
+package tasks;
 
-import tasks.Epic;
 
 public enum TypeTask {
     TASK,

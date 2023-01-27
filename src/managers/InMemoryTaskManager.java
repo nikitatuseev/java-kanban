@@ -220,7 +220,7 @@ public class InMemoryTaskManager implements TaskManager {
             } else if (statusNew == list.size()) {
                 epicForUpdate.setStatus(StatusTask.NEW);
             } else {
-                epicForUpdate.setStatus(StatusTask.In_Progress);
+                epicForUpdate.setStatus(StatusTask.IN_PROGRESS);
             }
         }
     }

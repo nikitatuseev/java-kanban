@@ -2,6 +2,6 @@ package tasks;
 
 public enum StatusTask {
     NEW,
-    In_Progress,
+    IN_PROGRESS,
     DONE
 }

@@ -34,7 +34,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         Map<Integer, Node> nodeMap;
         private Node head;
         private Node tail;
-        private int size = 0;
 
         public CustomLinkedList() {
             nodeMap = new HashMap<>();
@@ -50,7 +49,6 @@ public class InMemoryHistoryManager implements HistoryManager {
                 oldTail.next = newNode;
             }
             nodeMap.put(task.getId(), newNode);
-            size++;
         }
 
         private List<Task> getTasks() {

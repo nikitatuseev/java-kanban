@@ -8,22 +8,19 @@ import tasks.Task;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Path;
+
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException, IllegalAccessException {
-
-        //я уже что-то сильно запутался в методах и не понимаю что работает не так как надо. Вроде все работает но
-        //через раз и у меня не получается сделать методы из тз статичными. и я не понимаю что должен возвращать
-        //метод loadFromFile
+    public static void main(String[] args) throws FileNotFoundException {
 
         TaskManager manager = Managers.getDefault();
         TaskManager memory = Managers.saveInMemory();
-
-        FileBackedTasksManager fr = new FileBackedTasksManager();
-        fr.loadFromFile(new File("resources/record"));
+        File file = new File(("resources/record"));
+        FileBackedTasksManager fr = FileBackedTasksManager.loadFromFile(file);
         System.out.println(fr.getAllTask());
         System.out.println(fr.getAllEpic());
+        System.out.println(fr.getAllSubTask());
+        System.out.println(fr.getHistory());
 
         Task taskSecond = new Task("taskJ", "hjh");
         memory.saveTask(taskSecond);
@@ -35,7 +32,6 @@ public class Main {
         memory.saveTask(task3);
         memory.getTaskById(1);
         memory.getEpicById(2);
-        System.out.println(memory.getHistory());
 
         Task newTaskFirst = new Task("taskH", "description");
         newTaskFirst.setId(1);
