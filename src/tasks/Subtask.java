@@ -10,6 +10,10 @@ public class Subtask extends Task {
         this.idOfEpic = idOfEpic;
     }
 
+    public TypeTask getType() {
+        return TypeTask.SUBTASK;
+    }
+
     public int getIdOfEpic() {
         return idOfEpic;
     }

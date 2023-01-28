@@ -7,11 +7,11 @@ import tasks.Subtask;
 import tasks.Task;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+
 
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
 
         TaskManager manager = Managers.getDefault();
         TaskManager memory = Managers.saveInMemory();

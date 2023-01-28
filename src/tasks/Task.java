@@ -13,6 +13,10 @@ public class Task {
         this.description = description;
     }
 
+    public TypeTask getType() {
+        return TypeTask.TASK;
+    }
+
     public Task(int id, StatusTask status, String name, String description) {
         this.id = id;
         this.status = status;

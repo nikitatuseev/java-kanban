@@ -1,6 +1,7 @@
 package managers;
 
 
+import exceptions.ManagerSaveException;
 import tasks.*;
 
 import java.io.*;
@@ -8,11 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    protected File file = new File(("resources/record"));
-
-    public FileBackedTasksManager() {
-        super();
-    }
+    protected File file;
 
     public FileBackedTasksManager(File file) {
         this.file = file;
@@ -111,15 +108,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         save();
     }
 
-    public static class ManagerSaveException extends RuntimeException {
-        public ManagerSaveException(String message) {
-            super(message);
-        }
-    }
-
     private void save() {
-        final String historyInString = historyToString((InMemoryHistoryManager) historyManager);
-        try (FileWriter fileWriter = new FileWriter(pathToSaveData())) {
+        final String historyInString = historyToString(historyManager);
+        try (FileWriter fileWriter = new FileWriter(file)) {
             for (Task task : allTask.values()) {
                 fileWriter.write(taskToString(task));
                 fileWriter.write("\n");
@@ -135,16 +126,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             fileWriter.write("\n");
             fileWriter.write(historyInString);
         } catch (IOException e) {
-            throw new ManagerSaveException("данные не сохранены"); // IOException это ведь исключение ввода/вывода
-            // и я не понял какое сообщение надо выводить в случае ошибки
+            throw new ManagerSaveException("данные не сохранены");
         }
     }
-// и в этом методе я не понимаю как надо сравнивать с помощью моего enum. То есть как получить тип задачи
-    //для сравнения не с помощью getClass()
+
     private String taskToString(Task task) {
-        if (task.getClass() == Subtask.class) {
+        if (task.getType() == TypeTask.SUBTASK) {
             return SubTaskToString((Subtask) task);
-        } else if (task.getClass() == Task.class) {
+        } else if (task.getType() == TypeTask.TASK) {
             return task.getId() + "," + "TASK" + "," + task.getName() + "," + task.getStatus() + "," + task.getDescription();
         } else {
             return task.getId() + "," + "EPIC" + "," + task.getName() + "," + task.getStatus() + "," + task.getDescription();
@@ -155,8 +144,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return task.getId() + "," + "SUBTASK" + "," + task.getName() + "," + task.getStatus() + "," + task.getDescription() + "," + task.getIdOfEpic();
     }
 
-    private String historyToString(InMemoryHistoryManager historyManager) {
-        ArrayList<Integer> taskId = new ArrayList<>(historyManager.listOfHistory.nodeMap.keySet());
+    private String historyToString(HistoryManager historyManager) {
+        List<Integer> taskId = new ArrayList<>();
+        for (Task task : historyManager.getHistory()) {
+            taskId.add(task.getId());
+        }
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < taskId.size(); i++) {
             if (i != taskId.size() - 1) {
@@ -168,22 +160,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return stringBuilder.toString();
     }
 
-    public static String pathToSaveData() {
-        String content = null;
-        content = "resources/record";
-        return content;
-    }
-
-    public static FileBackedTasksManager loadFromFile(File file) throws FileNotFoundException {
+    public static FileBackedTasksManager loadFromFile(File file) {
         FileBackedTasksManager loadFromFile = new FileBackedTasksManager(file);
         List<String> lines = new ArrayList<>();
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        try (BufferedReader buff = new BufferedReader(br)) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             while (br.ready()) {
                 lines.add(br.readLine());
             }
         } catch (IOException e) {
-            e.getStackTrace();
+            throw new ManagerSaveException("Ошибка чтения");
         }
         for (int i = 0; i < lines.size(); i++) {
             if (i < lines.size() - 2) {

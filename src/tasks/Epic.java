@@ -10,6 +10,10 @@ public class Epic extends Task {
         super(name, description);
     }
 
+    public TypeTask getType() {
+        return TypeTask.EPIC;
+    }
+
     public Epic(int id, StatusTask status, String name, String description) {
         super(id, status, name, description);
     }
