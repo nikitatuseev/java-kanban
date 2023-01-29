@@ -1,6 +1,5 @@
 package managers;
 
-
 import exceptions.ManagerSaveException;
 import tasks.*;
 
@@ -133,10 +132,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     private String taskToString(Task task) {
         if (task.getType() == TypeTask.SUBTASK) {
             return SubTaskToString((Subtask) task);
-        } else if (task.getType() == TypeTask.TASK) {
-            return task.getId() + "," + "TASK" + "," + task.getName() + "," + task.getStatus() + "," + task.getDescription();
         } else {
-            return task.getId() + "," + "EPIC" + "," + task.getName() + "," + task.getStatus() + "," + task.getDescription();
+            return task.getId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + "," + task.getDescription();
         }
     }
 
@@ -183,16 +180,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     loadFromFile.allEpic.put(epic.getId(), epic);
                 } else if (type == TypeTask.SUBTASK) {
                     int idOfEpic = Integer.parseInt(split[5]);
-                    Subtask subtask = new Subtask(name, description, idOfEpic);
-                    subtask.setId(id);
-                    subtask.setStatus(status);
+                    Subtask subtask = new Subtask(id, status, name, description, idOfEpic);
                     ArrayList<Integer> idForEpic = new ArrayList<>();
                     idForEpic.add(subtask.getId());
                     loadFromFile.allEpic.get(idOfEpic).setListIdOfSubTask(idForEpic);
                     loadFromFile.allSubTask.put(subtask.getId(), subtask);
                 } else if (type == TypeTask.TASK) {
-                    Task task = new Task(name, description);
-                    task.setId(id);
+                    Task task = new Task(id, status, name, description);
                     if (task.getId() == 0) {
                         task.setId(1);
                     }
@@ -213,7 +207,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 }
             }
         }
-
         return loadFromFile;
     }
 
@@ -233,7 +226,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
         return idFromHistory;
     }
-
 }
 
 

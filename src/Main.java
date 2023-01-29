@@ -8,11 +8,8 @@ import tasks.Task;
 
 import java.io.File;
 
-
-
 public class Main {
     public static void main(String[] args) {
-
         TaskManager manager = Managers.getDefault();
         TaskManager memory = Managers.saveInMemory();
         File file = new File(("resources/record"));
@@ -37,10 +34,6 @@ public class Main {
         newTaskFirst.setId(1);
         newTaskFirst.setStatus(StatusTask.DONE);
         memory.updateTask(newTaskFirst);
-
-
-
-
 
 /*
         System.out.println("печать всех обычных задач");

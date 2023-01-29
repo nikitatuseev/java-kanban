@@ -10,12 +10,12 @@ public class Epic extends Task {
         super(name, description);
     }
 
-    public TypeTask getType() {
-        return TypeTask.EPIC;
-    }
-
     public Epic(int id, StatusTask status, String name, String description) {
         super(id, status, name, description);
+    }
+
+    public TypeTask getType() {
+        return TypeTask.EPIC;
     }
 
     public ArrayList<Integer> getListIdOfSubTask() {
@@ -45,5 +45,4 @@ public class Epic extends Task {
         return "Id:" + getId() + " Name-" + getName() + "-" + getDescription() + " Статус " + getStatus()
                 + " " + "Список id подзадач " + listIdOfSubTask;
     }
-
 }

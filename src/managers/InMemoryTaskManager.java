@@ -163,7 +163,6 @@ public class InMemoryTaskManager implements TaskManager {
             allSubTask.remove(keySubTask);
         }
         allEpic.remove(id);
-
     }
 
     @Override
@@ -177,7 +176,6 @@ public class InMemoryTaskManager implements TaskManager {
         listId.remove(Integer.valueOf(id));
         epicWithSelectedSub.setListIdOfSubTask(listId);
         allSubTask.remove(id);
-
     }
 
     @Override

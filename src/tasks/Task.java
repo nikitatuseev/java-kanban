@@ -13,15 +13,15 @@ public class Task {
         this.description = description;
     }
 
-    public TypeTask getType() {
-        return TypeTask.TASK;
-    }
-
     public Task(int id, StatusTask status, String name, String description) {
         this.id = id;
         this.status = status;
         this.name = name;
         this.description = description;
+    }
+
+    public TypeTask getType() {
+        return TypeTask.TASK;
     }
 
     public int getId() {
@@ -72,6 +72,4 @@ public class Task {
     public String toString() {
         return "Id:" + getId() + " Name:" + getName() + "-" + getDescription() + " Статус-" + getStatus();
     }
-
-
 }
