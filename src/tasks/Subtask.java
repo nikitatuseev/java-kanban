@@ -1,5 +1,6 @@
 package tasks;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Subtask extends Task {
@@ -10,8 +11,13 @@ public class Subtask extends Task {
         this.idOfEpic = idOfEpic;
     }
 
-    public Subtask(int id, StatusTask status, String name, String description, int idOfEpic) {
-        super(id, status, name, description);
+    public Subtask(int id, StatusTask status, String name, String description, int idOfEpic, LocalDateTime startTime, long duration) {
+        super(id, status, name, description, startTime, duration);
+        this.idOfEpic = idOfEpic;
+    }
+
+    public Subtask(String name, String description, int idOfEpic, LocalDateTime startTime, long duration) {
+        super(name, description, startTime, duration);
         this.idOfEpic = idOfEpic;
     }
 
@@ -43,7 +49,14 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Id:" + getId() + " Name:" + getName() + "-" + getDescription() + " Статус-" + getStatus()
-                + " id Эпика=" + getIdOfEpic();
+        if (getDuration() != 0) {
+            return "Id:" + getId() + " Name:" + getName() + "-" + getDescription() + " Статус-" + getStatus()
+                    + " id Эпика=" + getIdOfEpic() + " startTime:"
+                    + getStartTime() + " продолжительность:" + getDuration() + " endTime:" + getEndTime();
+        } else {
+            return "Id:" + getId() + " Name:" + getName() + "-" + getDescription() + " Статус-" + getStatus()
+                    + " id Эпика=" + getIdOfEpic();
+        }
+
     }
 }

@@ -6,6 +6,7 @@ import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 public interface TaskManager {
     void saveTask(Task task);
@@ -47,5 +48,7 @@ public interface TaskManager {
     void updateEpic(Epic epic);
 
     List<Task> getHistory();
+
+    TreeSet<Task> getSortedTasks();
 }
 

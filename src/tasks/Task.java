@@ -1,5 +1,7 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -8,9 +10,30 @@ public class Task {
     protected StatusTask status = StatusTask.NEW;
     protected int id;
 
+    protected long duration;
+
+    protected LocalDateTime startTime;
+
+
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public Task(int id, StatusTask status, String name, String description, LocalDateTime startTime, long duration) {
+        this.id = id;
+        this.status = status;
+        this.name = name;
+        this.description = description;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    public Task(String name, String description, LocalDateTime startTime, long duration) {
+        this.name = name;
+        this.description = description;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public Task(int id, StatusTask status, String name, String description) {
@@ -56,6 +79,27 @@ public class Task {
         this.status = status;
     }
 
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        Duration duration = Duration.ofMinutes(this.duration);
+        return startTime.plus(duration);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,6 +114,11 @@ public class Task {
     }
 
     public String toString() {
-        return "Id:" + getId() + " Name:" + getName() + "-" + getDescription() + " Статус-" + getStatus();
+        if (getDuration() != 0) {
+            return "Id:" + getId() + " Name:" + getName() + "-" + getDescription() + " Статус-" + getStatus() + " startTime:"
+                    + getStartTime() + " продолжительность:" + getDuration() + " endTime:" + getEndTime();
+        } else {
+            return "Id:" + getId() + " Name:" + getName() + "-" + getDescription() + " Статус-" + getStatus();
+        }
     }
 }
