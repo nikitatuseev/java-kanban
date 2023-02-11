@@ -57,6 +57,5 @@ public class Subtask extends Task {
             return "Id:" + getId() + " Name:" + getName() + "-" + getDescription() + " Статус-" + getStatus()
                     + " id Эпика=" + getIdOfEpic();
         }
-
     }
 }

@@ -30,12 +30,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
 
     @BeforeEach
     public void createTests() {
-        /*task = new Task(1, StatusTask.NEW, "task1", "description");
-        epic = new Epic(2, StatusTask.NEW, "epic1", "описание");
-        subtask1 = new Subtask(3, StatusTask.NEW, "sub1", "description", epic.getId());
-        subtask2 = new Subtask(4, StatusTask.NEW, "sub2", "hh", epic.getId());
 
-         */
 
         task = new Task(1, StatusTask.NEW, "task1", "description", LocalDateTime.of(1, 1, 1, 1, 0), 30);
 

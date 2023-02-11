@@ -92,4 +92,3 @@ class InMemoryTaskManagerTest extends AbstractTaskManagerTest<InMemoryTaskManage
         assertEquals(3, taskManager.getHistory().size(), "История не совпадает");
     }
 }
-

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.io.TempDir;
 import tasks.Task;
 
-import java.io.BufferedReader;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -60,12 +60,7 @@ class FileBackedTasksManagerTest extends AbstractTaskManagerTest<FileBackedTasks
 
     @Test
     public void loadFromFileShouldThrowException() {
-        ManagerSaveException ex = assertThrows(ManagerSaveException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                FileBackedTasksManager.loadFromFile(new File("test.csv"));
-            }
-        });
+        ManagerSaveException ex = assertThrows(ManagerSaveException.class, () -> FileBackedTasksManager.loadFromFile(new File("test.csv")));
         assertEquals("Ошибка чтения", ex.getMessage());
     }
 
