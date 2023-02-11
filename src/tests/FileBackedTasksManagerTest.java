@@ -40,6 +40,7 @@ class FileBackedTasksManagerTest extends AbstractTaskManagerTest<FileBackedTasks
     }
 
     //я не понимаю ошибки в тестах на сохранение и чтение из файла
+    //может из-за этих тестов не открывался проект
   /*  @Test
     public void saveTest() {
         taskManager.saveTask(task);
