@@ -10,43 +10,49 @@ import java.io.File;
 import java.time.LocalDateTime;
 
 public class Main {
-    public static void main(String[] args) throws InstantiationException {
+    public static void main(String[] args) {
         TaskManager manager = Managers.getDefault();
-        TaskManager memory = Managers.saveInMemory();
-        FileBackedTasksManager load = FileBackedTasksManager.loadFromFile(new File("resources/record"));
-        System.out.println(load.getAllTask());
-        System.out.println(load.getAllEpic());
+        /*TaskManager memory = Managers.saveInMemory();
+        File file = new File(("resources/record"));
+        FileBackedTasksManager fr = FileBackedTasksManager.loadFromFile(file);
+        System.out.println(fr.getAllTask());
+        System.out.println(fr.getAllEpic());
+        System.out.println(fr.getAllSubTask());
+        System.out.println(fr.getHistory());
 
 
-        Task task = new Task("dd", "ss", LocalDateTime.now(), 30);
+
+        Task task = new Task(1, StatusTask.NEW, "task1", "description",LocalDateTime.of(1,1,1,1,0),30);
         memory.saveTask(task);
-
-        System.out.println("LOOK");
-        System.out.println(memory.getAllTask());
-        Epic epic = new Epic("sd", "wd");
+        Epic epic = new Epic(2, StatusTask.NEW, "epic1", "описание");
         memory.saveEpic(epic);
-
-        Subtask subTask = new Subtask("gd", "wdw", epic.getId(), LocalDateTime.now().plusMinutes(30), 60);
-        memory.saveSubTask(subTask);
-
-        Subtask subtask2 = new Subtask("grfg", "efg", epic.getId(), LocalDateTime.now().plusMinutes(90), 60);
+        Subtask subtask1 = new Subtask(3, StatusTask.NEW, "sub1", "description", epic.getId(),LocalDateTime.of(1,1,1,1,30),60);
+        memory.saveSubTask(subtask1);
+        Subtask subtask2 = new Subtask(4, StatusTask.NEW, "sub2", "hh", epic.getId(),LocalDateTime.of(1,1,1,2,0),30);
         memory.saveSubTask(subtask2);
 
-        System.out.println(memory.getSortedTasks());
-        /*
+         */
+
+        Task task = new Task("dd", "ss", LocalDateTime.now(), 30);
+        manager.saveTask(task);
+
+        Epic epic = new Epic("sd", "wd");
+        manager.saveEpic(epic);
+        Subtask subTask = new Subtask("gd", "wdw", epic.getId(), LocalDateTime.now().plusMinutes(30), 60);
+        manager.saveSubTask(subTask);
+
+        Subtask subtask2 = new Subtask("grfg", "efg", epic.getId(), LocalDateTime.now().plusMinutes(90), 60);
+        manager.saveSubTask(subtask2);
         Subtask subtask3 = new Subtask("okd", "jsidj", epic.getId(), LocalDateTime.now().plusMinutes(150), 20);
         manager.saveSubTask(subtask3);
-        System.out.println(manager.getAllEpic());
-        //manager.removeSubTaskById(3);
+
+        manager.removeSubTaskById(3);
         System.out.println(manager.getAllEpic());
         System.out.println(manager.getAllSubTask());
         System.out.println("LKKK");
-        Subtask newSubTask=new Subtask(subTask.getId(), StatusTask.DONE,"wdw","gd", epic.getId(), LocalDateTime.now().plusMinutes(200),30);
-        manager.updateSubTask(newSubTask);
+        manager.removeAllTask();
         System.out.println(manager.getSortedTasks());
 
-
-         */
 
     }
 }
