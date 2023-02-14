@@ -10,7 +10,7 @@ import java.io.File;
 import java.time.LocalDateTime;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InstantiationException {
         TaskManager manager = Managers.getDefault();
         /*TaskManager memory = Managers.saveInMemory();
         File file = new File(("resources/record"));
