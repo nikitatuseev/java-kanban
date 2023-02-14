@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 public interface TaskManager {
-    void saveTask(Task task);
+    void saveTask(Task task) throws InstantiationException;
 
     void saveEpic(Epic epic);
 

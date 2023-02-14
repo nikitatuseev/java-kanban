@@ -15,10 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class InMemoryTaskManagerTest extends AbstractTaskManagerTest<InMemoryTaskManager> {
 
     @BeforeEach
-    public void createTests() {
-        super.createTests();
-        taskManager = (InMemoryTaskManager) Managers.getDefault();
-
+    public void setUp() {
+        taskManager = new InMemoryTaskManager();
+        createTests();
     }
 
     @Test
@@ -79,16 +78,6 @@ class InMemoryTaskManagerTest extends AbstractTaskManagerTest<InMemoryTaskManage
         taskManager.updateEpicStatus(subtask1);
         assertEquals(StatusTask.NEW, epic.getStatus());
     }
-
-    @Test
-    void getHistory() {
-        taskManager.saveTask(task);
-        taskManager.saveEpic(epic);
-        taskManager.saveSubTask(subtask1);
-        taskManager.getTaskById(task.getId());
-        taskManager.getEpicById(epic.getId());
-        taskManager.getSubTaskById(subtask1.getId());
-
-        assertEquals(3, taskManager.getHistory().size(), "История не совпадает");
-    }
 }
+
+

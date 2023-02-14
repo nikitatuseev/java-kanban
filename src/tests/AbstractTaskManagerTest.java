@@ -1,7 +1,6 @@
 package tests;
 
 import managers.TaskManager;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.StatusTask;
@@ -11,15 +10,12 @@ import tasks.Task;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     T taskManager;
 
-    //я не понимаю почему в тестах на subTask если не сохранять обычный task то появляется ошибка и тест работает
-    //только при сохранении обычного task
     Task task;
 
     Epic epic;
@@ -28,10 +24,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
 
     Subtask subtask2;
 
-    @BeforeEach
     public void createTests() {
-
-
         task = new Task(1, StatusTask.NEW, "task1", "description", LocalDateTime.of(1, 1, 1, 1, 0), 30);
 
         epic = new Epic(2, StatusTask.NEW, "epic1", "описание");
@@ -49,7 +42,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
 
 
     @Test
-    void saveTask() {
+    void saveTask() throws InstantiationException {
         taskManager.saveTask(task);
         assertEquals(1, taskManager.getAllTask().size(), "количество задач не совпадает");
     }
@@ -72,7 +65,11 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
 
     @Test
     void saveSubTask() {
-        taskManager.saveTask(task);
+        try {
+            taskManager.saveTask(task);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        }
         taskManager.saveEpic(epic);
         taskManager.saveSubTask(subtask1);
         taskManager.saveSubTask(subtask2);
@@ -80,12 +77,12 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void ListTaskShouldBeNull() {
+    void listTaskShouldBeNull() {
         assertEquals(0, taskManager.getAllTask().size(), "размер списка не совпадает");
     }
 
     @Test
-    void getAllTask() {
+    void getAllTask() throws InstantiationException {
         taskManager.saveTask(task);
         List<Task> list = new ArrayList<>();
         list.add(task);
@@ -111,35 +108,28 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getAllSubTask() {
+    void getAllSubTask() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.saveEpic(epic);
-        taskManager.saveSubTask(subtask2);
         taskManager.saveSubTask(subtask1);
+        taskManager.saveSubTask(subtask2);
         List<Subtask> list = new ArrayList<>();
         list.add(subtask1);
         list.add(subtask2);
         assertEquals(list.size(), taskManager.getAllSubTask().size());
-
     }
 
     @Test
-    void getTaskById() {
+    void getTaskById() throws InstantiationException {
         taskManager.saveTask(task);
         int id = task.getId();
         assertEquals(task, taskManager.getTaskById(id));
     }
 
     @Test
-    void getTaskByWrongId() {//id всегда начинается с 1 так что 0 id не может быть
+    void getTaskByWrongId() throws InstantiationException {//id всегда начинается с 1 так что 0 id не может быть
         taskManager.saveTask(task);
         assertNull(taskManager.getTaskById(0));
-    }
-
-    @Test
-    void getEmptyTask() {
-        Random rnd = new Random();
-        assertNull(taskManager.getTaskById(rnd.nextInt(100)));
     }
 
     @Test
@@ -156,13 +146,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getEmptyEpic() {
-        Random rnd = new Random();
-        assertNull(taskManager.getEpicById(rnd.nextInt(100)));
-    }
-
-    @Test
-    void getSubTaskById() {
+    void getSubTaskById() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.saveEpic(epic);
         taskManager.saveSubTask(subtask1);
@@ -171,7 +155,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getSubTaskByWrongId() {
+    void getSubTaskByWrongId() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.saveEpic(epic);
         taskManager.saveSubTask(subtask1);
@@ -179,13 +163,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getEmptySubTask() {
-        Random rnd = new Random();
-        assertNull(taskManager.getSubTaskById(rnd.nextInt(100)));
-    }
-
-    @Test
-    void removeAllTask() {
+    void removeAllTask() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.removeAllTask();
         assertEquals(0, taskManager.getAllTask().size());
@@ -211,7 +189,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void removeAllSubTask() {
+    void removeAllSubTask() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.saveEpic(epic);
         taskManager.saveSubTask(subtask1);
@@ -227,7 +205,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void removeTaskById() {
+    void removeTaskById() throws InstantiationException {
         taskManager.saveTask(task);
         int id = task.getId();
         taskManager.removeTaskById(id);
@@ -235,7 +213,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void removeTaskByWrongId() {
+    void removeTaskByWrongId() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.removeTaskById(0);
         assertEquals(task, taskManager.getTaskById(task.getId()));
@@ -257,7 +235,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void removeSubTaskById() {
+    void removeSubTaskById() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.saveEpic(epic);
         taskManager.saveSubTask(subtask1);
@@ -266,7 +244,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void removeSubTaskByWrongId() {
+    void removeSubTaskByWrongId() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.saveEpic(epic);
         taskManager.saveSubTask(subtask1);
@@ -276,7 +254,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
 
     //так как при обновлении может поменяться не только статус, но и название или описание я сравниваю их полностью
     @Test
-    void updateTaskOnDONE() {
+    void updateTaskOnDONE() throws InstantiationException {
         taskManager.saveTask(task);
         Task newTaskFirst = new Task(task.getId(), StatusTask.DONE, "task1", "description", LocalDateTime.of(1, 1, 1, 1, 0), 30);
         taskManager.updateTask(newTaskFirst);
@@ -284,7 +262,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void updateTaskOnIN_PROGRESS() {
+    void updateTaskOnIN_PROGRESS() throws InstantiationException {
         taskManager.saveTask(task);
         Task newTaskFirst = new Task("task1", "description", LocalDateTime.of(1, 1, 1, 1, 0), 30);
         newTaskFirst.setId(task.getId());
@@ -294,7 +272,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void updateTask() {
+    void updateTask() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.updateTask(task);
         assertEquals(StatusTask.NEW, taskManager.getTaskById(task.getId()).getStatus());
@@ -310,7 +288,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void updateSubTaskOnDONE() {
+    void updateSubTaskOnDONE() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.saveEpic(epic);
         taskManager.saveSubTask(subtask1);
@@ -320,7 +298,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void updateSubTaskOnIN_PROGRESS() {
+    void updateSubTaskOnIN_PROGRESS() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.saveEpic(epic);
         taskManager.saveSubTask(subtask1);
@@ -330,7 +308,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void CheckEndTimeTask() {
+    void CheckEndTimeTask() throws InstantiationException {
         taskManager.saveTask(task);
         task.setStartTime(LocalDateTime.of(1, 1, 1, 1, 0));
         task.setDuration(30);
@@ -338,7 +316,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void CheckEndTimeSubTask() {
+    void CheckEndTimeSubTask() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.saveEpic(epic);
         taskManager.saveSubTask(subtask1);
@@ -348,12 +326,12 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void CheckDurationOfEpic() {
+    void CheckDurationOfEpic() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.saveEpic(epic);
-        subtask1.setStartTime(LocalDateTime.of(1, 1, 1, 1, 0));
+        subtask1.setStartTime(LocalDateTime.of(1, 1, 2, 1, 0));
         subtask1.setDuration(30);
-        subtask2.setStartTime(LocalDateTime.of(1, 1, 1, 1, 30));
+        subtask2.setStartTime(LocalDateTime.of(1, 1, 2, 1, 30));
         subtask2.setDuration(60);
         taskManager.saveSubTask(subtask1);
         taskManager.saveSubTask(subtask2);
@@ -361,7 +339,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void CheckEndTimeEpic() {
+    void CheckEndTimeEpic() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.saveEpic(epic);
         taskManager.saveSubTask(subtask1);
@@ -370,12 +348,12 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void CheckStartTimeEpic() {
+    void CheckStartTimeEpic() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.saveEpic(epic);
-        subtask1.setStartTime(LocalDateTime.of(1, 1, 1, 1, 0));
+        subtask1.setStartTime(LocalDateTime.of(1, 1, 2, 1, 0));
         subtask1.setDuration(30);
-        subtask2.setStartTime(LocalDateTime.of(1, 1, 1, 1, 30));
+        subtask2.setStartTime(LocalDateTime.of(1, 1, 2, 1, 30));
         subtask2.setDuration(60);
         taskManager.saveSubTask(subtask1);
         taskManager.saveSubTask(subtask2);
@@ -383,17 +361,42 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void CheckTimeEpicAfterRemoveFirstSubTask() {
+    void CheckTimeEpicAfterRemoveFirstSubTask() throws InstantiationException {
         taskManager.saveTask(task);
         taskManager.saveEpic(epic);
-        subtask1.setStartTime(LocalDateTime.of(1, 1, 1, 1, 0));
+        subtask1.setStartTime(LocalDateTime.of(1, 1, 2, 1, 0));
         subtask1.setDuration(30);
-        subtask2.setStartTime(LocalDateTime.of(1, 1, 1, 1, 30));
+        subtask2.setStartTime(LocalDateTime.of(1, 1, 2, 1, 30));
         subtask2.setDuration(60);
         taskManager.saveSubTask(subtask1);
         taskManager.saveSubTask(subtask2);
         taskManager.removeSubTaskById(subtask1.getId());
         assertEquals(subtask2.getStartTime(), epic.getStartTime());
     }
+
+    @Test
+    void getHistory() throws InstantiationException {
+        taskManager.saveTask(task);
+        taskManager.saveEpic(epic);
+        taskManager.saveSubTask(subtask1);
+        taskManager.getTaskById(task.getId());
+        taskManager.getEpicById(epic.getId());
+        taskManager.getSubTaskById(subtask1.getId());
+        assertEquals(3, taskManager.getHistory().size(), "История не совпадает");
+    }
+
+    @Test
+    void getSortedTask() throws InstantiationException {
+        taskManager.saveTask(task);
+        taskManager.saveEpic(epic);
+        taskManager.saveSubTask(subtask1);
+        List<Task> expectedList = new ArrayList<>();
+        expectedList.add(task);
+        expectedList.add(subtask1);
+        List<Task> actualList = new ArrayList<>(taskManager.getSortedTasks());
+        assertEquals(expectedList, actualList);
+    }
 }
+
+
 

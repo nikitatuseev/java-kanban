@@ -9,7 +9,6 @@ public class Task {
     protected String description;
     protected StatusTask status = StatusTask.NEW;
     protected int id;
-
     protected long duration;
 
     protected LocalDateTime startTime;
@@ -95,8 +94,7 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        Duration duration = Duration.ofMinutes(this.duration);
-        return startTime.plus(duration);
+        return startTime.plus(Duration.ofMinutes(duration));
     }
 
     @Override
