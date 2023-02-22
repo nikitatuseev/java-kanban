@@ -205,6 +205,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     idForEpic.add(subtask.getId());
                     loadFromFile.allEpic.get(idOfEpic).setListIdOfSubTask(idForEpic);
                     loadFromFile.allSubTask.put(subtask.getId(), subtask);
+                    loadFromFile.addTaskForSorting(subtask);
                 } else if (type == TypeTask.TASK) {
                     Task task = new Task(id, status, name, description, startTime, duration);
                     if (task.getId() == 0) {
@@ -212,6 +213,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     }
                     task.setStatus(status);
                     loadFromFile.allTask.put(task.getId(), task);
+                    loadFromFile.addTaskForSorting(task);
                 }
             } else if (i == lines.size() - 1) {
                 historyFromString(lines.get(i));

@@ -6,7 +6,6 @@ import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 public interface TaskManager {
     void saveTask(Task task) throws InstantiationException;
@@ -49,6 +48,6 @@ public interface TaskManager {
 
     List<Task> getHistory();
 
-    TreeSet<Task> getSortedTasks();
+    List<Task> getSortedTasks();
 }
 

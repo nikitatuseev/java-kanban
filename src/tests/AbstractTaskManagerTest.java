@@ -64,12 +64,8 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void saveSubTask() {
-        try {
-            taskManager.saveTask(task);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        }
+    void saveSubTask() throws InstantiationException {
+        taskManager.saveTask(task);
         taskManager.saveEpic(epic);
         taskManager.saveSubTask(subtask1);
         taskManager.saveSubTask(subtask2);
@@ -390,11 +386,14 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
         taskManager.saveTask(task);
         taskManager.saveEpic(epic);
         taskManager.saveSubTask(subtask1);
-        List<Task> expectedList = new ArrayList<>();
-        expectedList.add(task);
-        expectedList.add(subtask1);
-        List<Task> actualList = new ArrayList<>(taskManager.getSortedTasks());
-        assertEquals(expectedList, actualList);
+        assertEquals(task, taskManager.getSortedTasks().get(0));
+        assertEquals(subtask1,taskManager.getSortedTasks().get(1));
+        task.setStartTime( LocalDateTime.of(1, 1, 1, 2, 30));
+        taskManager.updateTask(task);
+        subtask1.setStartTime( LocalDateTime.of(1, 1, 1, 1, 0));
+        taskManager.updateSubTask(subtask1);
+        assertEquals(subtask1,taskManager.getSortedTasks().get(0));
+        assertEquals(task,taskManager.getSortedTasks().get(1));
     }
 }
 
