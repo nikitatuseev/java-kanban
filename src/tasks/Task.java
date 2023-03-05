@@ -8,10 +8,13 @@ public class Task {
     protected String name;
     protected String description;
     protected StatusTask status = StatusTask.NEW;
+
     protected int id;
     protected long duration;
 
     protected LocalDateTime startTime;
+
+
 
     public Task(String name, String description) {
         this.name = name;

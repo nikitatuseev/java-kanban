@@ -19,7 +19,7 @@ class EpicTest {
 
     @BeforeEach
     public void BeforeEach() {
-        manager = Managers.getDefault();
+        manager = Managers.getDefForTest();
         Epic epic = new Epic("epic1", "описание");
         manager.saveEpic(epic);
     }

@@ -2,8 +2,7 @@ package managers;
 
 import exceptions.ManagerSaveException;
 import tasks.*;
-
-
+import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -307,8 +306,6 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(sortTasks);
     }
 
-    //не очень понял в чем была ошибка прошлого варианта, ведь он и так сравнивал новую задачу со всеми уже имеющимися
-    //в списке
     public void checkIntersections(Task newTask) {
         if (sortTasks.size() != 0) {
             for (Task task : sortTasks) {

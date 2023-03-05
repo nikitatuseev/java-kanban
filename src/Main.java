@@ -1,17 +1,14 @@
-import managers.FileBackedTasksManager;
 import managers.Managers;
 import managers.TaskManager;
 import tasks.Epic;
-import tasks.StatusTask;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.io.File;
 import java.time.LocalDateTime;
 
 public class Main {
     public static void main(String[] args) throws InstantiationException {
-        TaskManager manager = Managers.getDefault();
+        //TaskManager manager = Managers.getDefault();
         /*TaskManager memory = Managers.saveInMemory();
         File file = new File(("resources/record"));
         FileBackedTasksManager fr = FileBackedTasksManager.loadFromFile(file);
@@ -33,25 +30,8 @@ public class Main {
 
          */
 
-        Task task = new Task("dd", "ss", LocalDateTime.now(), 30);
-        manager.saveTask(task);
 
-        Epic epic = new Epic("sd", "wd");
-        manager.saveEpic(epic);
-        Subtask subTask = new Subtask("gd", "wdw", epic.getId(), LocalDateTime.now().plusMinutes(30), 60);
-        manager.saveSubTask(subTask);
 
-        Subtask subtask2 = new Subtask("grfg", "efg", epic.getId(), LocalDateTime.now().plusMinutes(90), 60);
-        manager.saveSubTask(subtask2);
-        Subtask subtask3 = new Subtask("okd", "jsidj", epic.getId(), LocalDateTime.now().plusMinutes(150), 20);
-        manager.saveSubTask(subtask3);
-
-        manager.removeSubTaskById(3);
-        System.out.println(manager.getAllEpic());
-        System.out.println(manager.getAllSubTask());
-        System.out.println("LKKK");
-        manager.removeAllTask();
-        System.out.println(manager.getSortedTasks());
 
 
     }

@@ -109,7 +109,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         save();
     }
 
-    private void save() {
+    protected void save() {
         final String historyInString = historyToString(historyManager);
         try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write("id,type,status,name,description,startTime,duration,endTime");
@@ -153,7 +153,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             taskId.add(task.getId());
         }
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i < taskId.size(); i++) {
+        for (int i = 0; i < taskId.size(); i++) {
             if (i != taskId.size() - 1) {
                 stringBuilder.append(taskId.get(i)).append(",");
             } else {
