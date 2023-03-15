@@ -4,43 +4,31 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
-import managers.FileBackedTasksManager;
-//import managers.HttpTaskManager;
+import managers.HttpTaskManager;
 import managers.Managers;
-import managers.TaskManager;
 
+import managers.TaskManager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class HttpTaskServer {
     public static final int PORT = 8080;
-
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     private final HttpServer server;
     private final Gson gson;
+    private final TaskManager taskManager;
 
-    private final FileBackedTasksManager taskManager;
-
-    private final String pathFile = "src" + File.separator + "resources" + File.separator + "record.csv";
-    private final String urlHttpManager = "http://localhost:8080";
-
-    public HttpTaskServer() throws IOException {
+    public HttpTaskServer(HttpTaskManager taskManager) throws IOException {
         server = HttpServer.create();
         server.bind(new InetSocketAddress(PORT), 0);
         server.createContext("/tasks/task", this::handleTask);
@@ -49,33 +37,52 @@ public class HttpTaskServer {
         server.createContext("/tasks/history", this::handleHistory);
         server.createContext("/tasks", this::handlePriority);
         gson = Managers.getGson();
-        taskManager = (FileBackedTasksManager) Managers.saveInMemory();
+        this.taskManager = taskManager;
     }
 
-    private FileBackedTasksManager getTaskManager() {
-        return taskManager;
+    public HttpTaskServer() throws IOException, InterruptedException {
+        server = HttpServer.create();
+        server.bind(new InetSocketAddress(PORT), 0);
+        server.createContext("/tasks/task", this::handleTask);
+        server.createContext("/tasks/epic", this::handleEpic);
+        server.createContext("/tasks/subtask", this::handleSubtask);
+        server.createContext("/tasks/history", this::handleHistory);
+        server.createContext("/tasks", this::handlePriority);
+        gson = Managers.getGson();
+        this.taskManager = Managers.getDefault();
     }
 
     public void handlePriority(HttpExchange httpExchange) {
         try {
             String path = httpExchange.getRequestURI().getPath();
             String response;
-            response = gson.toJson(taskManager.getSortedTasks());
-            writeResponse(httpExchange, response);
-            return;
+            String method = httpExchange.getRequestMethod();
+            if (method.equals("GET")) {
+                response = gson.toJson(taskManager.getSortedTasks());
+                writeResponse(httpExchange, response);
+                return;
+            } else {
+                System.out.println("Ожидался запрос GET,а получился метод " + method);
+                httpExchange.sendResponseHeaders(405, 0);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-
     public void handleHistory(HttpExchange httpExchange) {
         try {
             String path = httpExchange.getRequestURI().getPath();
             String response;
-            response = gson.toJson(taskManager.getHistory());
-            writeResponse(httpExchange, response);
-            return;
+            String method = httpExchange.getRequestMethod();
+            if (method.equals("GET")) {
+                response = gson.toJson(taskManager.getHistory());
+                writeResponse(httpExchange, response);
+                return;
+            } else {
+                System.out.println("Ожидался запрос GET,а получился метод " + method);
+                httpExchange.sendResponseHeaders(405, 0);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -131,6 +138,10 @@ public class HttpTaskServer {
                 case "POST": {
                     handlePostEpic(httpExchange);
                     break;
+                }
+                default: {
+                    System.out.println("Ожидался запрос GET, DELETE, или POST, а получился метод " + method);
+                    httpExchange.sendResponseHeaders(405, 0);
                 }
             }
         } catch (IOException e) {
@@ -189,8 +200,12 @@ public class HttpTaskServer {
                     handlePostTask(httpExchange);
                     break;
                 }
+                default: {
+                    System.out.println("Ожидался запрос GET, DELETE, или POST, а получился метод " + method);
+                    httpExchange.sendResponseHeaders(405, 0);
+                }
             }
-        } catch (IOException e) {
+        } catch (IOException | InstantiationException e) {
             throw new RuntimeException(e);
         }
     }
@@ -210,20 +225,14 @@ public class HttpTaskServer {
                     } else if (Pattern.matches("^id=\\d+$", query)) {
                         String pathId = query.replaceFirst("id=", "");
                         int id = parsePathId(pathId);
-                        if (taskManager.getSubTaskById(id) != null) {
+                        if (Pattern.matches("^/tasks/subtask/epic/$", path)) {
+                            if (taskManager.getSubtasksByNameEpic(id) != null) {
+                                response = gson.toJson(taskManager.getSubtasksByNameEpic(id));
+                                writeResponse(httpExchange, response);
+                                return;
+                            }
+                        } else if (taskManager.getSubTaskById(id) != null) {
                             response = gson.toJson(taskManager.getSubTaskById(id));
-                            writeResponse(httpExchange, response);
-                            return;
-                        } else {
-                            response = gson.toJson("Получен некорректный id");
-                            writeResponse(httpExchange, response);
-                        }
-                        break;
-                    } else if (Pattern.matches("^subtaskByNameEpic=\\d+$", query)) {
-                        String pathId = query.replaceFirst("subtaskByNameEpic=", "");
-                        int id = parsePathId(pathId);
-                        if (taskManager.getSubtasksByNameEpic(id) != null) {
-                            response = gson.toJson(taskManager.getSubtasksByNameEpic(id));
                             writeResponse(httpExchange, response);
                             return;
                         } else {
@@ -258,13 +267,17 @@ public class HttpTaskServer {
                     handlePostSubtask(httpExchange);
                     break;
                 }
+                default: {
+                    System.out.println("Ожидался запрос GET, DELETE, или POST, а получился метод " + method);
+                    httpExchange.sendResponseHeaders(405, 0);
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void handlePostTask(HttpExchange httpExchange) throws IOException {
+    private void handlePostTask(HttpExchange httpExchange) throws IOException, InstantiationException {
         String body = readText(httpExchange);
         Task task;
         try {

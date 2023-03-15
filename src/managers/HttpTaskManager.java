@@ -7,14 +7,8 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.Proxy;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +18,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
     private final Gson gson;
 
     public HttpTaskManager(String url) throws IOException, InterruptedException {
-        super(new File(url));
+        super(null);
         client = new KVTaskClient(url);
         gson = Managers.getGson();
     }
@@ -48,8 +42,6 @@ public class HttpTaskManager extends FileBackedTasksManager {
         HttpTaskManager managerFromServer = new HttpTaskManager(url);
         List<Task> historyManager = managerFromServer.getHistory();
         int maxId = 0;
-
-
         String jsonString = managerFromServer.client.load("tasks");
         if (!jsonString.isEmpty()) {
             Type taskListType = new TypeToken<List<Task>>() {
@@ -62,7 +54,6 @@ public class HttpTaskManager extends FileBackedTasksManager {
                     maxId = task.getId();
                 }
             }
-
         }
         jsonString = managerFromServer.client.load("epic");
         if (!jsonString.isEmpty()) {

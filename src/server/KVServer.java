@@ -27,37 +27,39 @@ public class KVServer {
         server.createContext("/load", this::load);
     }
 
-    private void load(HttpExchange h)throws IOException {
-        try{
+    private void load(HttpExchange h) {
+        try {
             System.out.println("\n/load");
-            if(!hasAuth(h)){
+            if (!hasAuth(h)) {
                 System.out.println("Запрос не авторизован, нужен параметр в query API_TOKEN со значением айпи ключа");
-                h.sendResponseHeaders(403,0);
+                h.sendResponseHeaders(403, 0);
                 return;
             }
-            if("GET".equals(h.getRequestMethod())){
-                String key=h.getRequestURI().getPath().substring("/load/".length());
-                if(key.isEmpty()){
+            if ("GET".equals(h.getRequestMethod())) {
+                String key = h.getRequestURI().getPath().substring("/load/".length());
+                if (key.isEmpty()) {
                     System.out.println("Key пустой");
-                    h.sendResponseHeaders(400,0);
+                    h.sendResponseHeaders(400, 0);
                     return;
                 }
-                if(data.containsKey(key)){
-                    sendText(h,data.get(key));
-                }else{
+                if (data.containsKey(key)) {
+                    sendText(h, data.get(key));
+                } else {
                     System.out.println("Значения key" + key + "не существует");
-                    h.sendResponseHeaders(405,0);
+                    h.sendResponseHeaders(405, 0);
                 }
-            }else{
+            } else {
                 System.out.println("/load ждет GET-запрос, а получил " + h.getRequestMethod());
-                h.sendResponseHeaders(405,0);
+                h.sendResponseHeaders(405, 0);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             h.close();
         }
     }
 
-    private void save(HttpExchange h) throws IOException {
+    private void save(HttpExchange h) {
         try {
             System.out.println("\n/save");
             if (!hasAuth(h)) {
@@ -85,12 +87,14 @@ public class KVServer {
                 System.out.println("/save ждёт POST-запрос, а получил: " + h.getRequestMethod());
                 h.sendResponseHeaders(405, 0);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             h.close();
         }
     }
 
-    private void register(HttpExchange h) throws IOException {
+    private void register(HttpExchange h) {
         try {
             System.out.println("\n/register");
             if ("GET".equals(h.getRequestMethod())) {
@@ -99,6 +103,8 @@ public class KVServer {
                 System.out.println("/register ждёт GET-запрос, а получил " + h.getRequestMethod());
                 h.sendResponseHeaders(405, 0);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             h.close();
         }
@@ -111,7 +117,7 @@ public class KVServer {
         server.start();
     }
 
-    public void stop(){
+    public void stop() {
         server.stop(0);
     }
 

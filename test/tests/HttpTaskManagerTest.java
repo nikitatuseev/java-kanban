@@ -7,12 +7,14 @@ import org.junit.jupiter.api.Test;
 import server.KVServer;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static tests.HttpTaskServerTest.TEST_TIME;
 
 public class HttpTaskManagerTest extends AbstractTaskManagerTest<HttpTaskManager> {
+
+    protected static final LocalDateTime TEST_TIME = LocalDateTime.of(1, 1, 1, 2, 30);
 
     private final String url = "http://localhost:8078";
 
@@ -31,7 +33,6 @@ public class HttpTaskManagerTest extends AbstractTaskManagerTest<HttpTaskManager
         server.stop();
     }
 
-
     @Test
     void save() throws IOException, InterruptedException {
         taskManager.saveTask(task);
@@ -44,11 +45,14 @@ public class HttpTaskManagerTest extends AbstractTaskManagerTest<HttpTaskManager
         assertNotNull(taskManagerFromServer);
         assertEquals(taskManager.getAllTask(), taskManagerFromServer.getAllTask());
 
-        taskManager.getTaskById(task.getId());
+
         taskManagerFromServer = HttpTaskManager.loadFromServer(url);
         assertNotNull(taskManagerFromServer);
-        //тут не понимаю почему истории не получаются одинаковыми
-        // assertEquals(taskManager.getHistory(), taskManagerFromServer.getHistory());
+
+        taskManager.getTaskById(task.getId());
+        taskManagerFromServer.getTaskById(task.getId());
+
+        assertEquals(taskManager.getHistory(), taskManagerFromServer.getHistory());
 
         taskManager.removeTaskById(1);
         taskManagerFromServer = HttpTaskManager.loadFromServer(url);
